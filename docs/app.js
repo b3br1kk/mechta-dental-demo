@@ -448,14 +448,102 @@
   }
 
   /* --------------------------------------------------------------------------
-     6. TACTILE FAMILY CARE SLIP (#booking)
-        - Vertical stepped print-in from .care-slip-slot (x: 0, rotation: 0)
-        - Scroll-Then-Act (1200ms delay when triggered via .js-pick-service)
+     6. INTERACTIVE CLINIC RECEIPT DISPENSER (#booking)
+        - Full RECEIPT_CATALOG with concrete ₽ price orientirs for every option
+        - Vertical stepped print-in from .receipt-dispenser__slot-lip (x: 0, rotation: 0)
+        - Scroll-Then-Act (1220ms delay when triggered via .js-pick-service)
         - Strict lock (isJumpingToBooking + isSlipAnimating) so it NEVER plays twice!
         - Reset-On-Leave (retracts when scrolling away so it replays on return)
      -------------------------------------------------------------------------- */
+  const RECEIPT_CATALOG = {
+    "Бесплатный осмотр — врач сам подскажет на приёме (0 ₽)": {
+      code: "СМЕТА #00 · ОСМОТР И ПЛАН",
+      cabinet: "ТЕРАПИЯ · ДИАГНОСТИКА",
+      title: "Бесплатный осмотр — врач сам подскажет на приёме (0 ₽)",
+      anesthesia: "2 этапа (гель + укол)",
+      total: "от 4 500 ₽ (после осмотра)",
+      lines: [
+        ["01. Первичный осмотр профильного врача (20–30 мин)", "0 ₽"],
+        ["02. Пошаговый план лечения и точная смета до старта", "0 ₽"],
+        ["03. Ориентир: световая пломба / лечение кариеса", "от 4 500 ₽"],
+        ["04. Ориентир: бережное удаление / коронки под ключ", "от 6 500 ₽"],
+      ],
+    },
+    "Болит зуб / реагирует на холодное (осмотр 0 ₽)": {
+      code: "СМЕТА #01 · СНЯТИЕ БОЛИ",
+      cabinet: "ТЕРАПИЯ · КАБ. №1",
+      title: "Острая боль или реакция зуба на холодное / горячее",
+      anesthesia: "Гель + мягкий укол",
+      total: "от 4 800 ₽",
+      lines: [
+        ["01. Бесплатный осмотр врача и прицельная диагностика", "0 ₽"],
+        ["02. Двухэтапное обезболивание (аппликационный гель + анестетик)", "от 650 ₽"],
+        ["03. Снятие воспаления и сохранение зуба за 1 визит", "от 4 800 ₽"],
+        ["04. Контрольная проверка по прикусу и рекомендации", "0 ₽"],
+      ],
+    },
+    "Лечение кариеса / замена пломбы": {
+      code: "СМЕТА #02 · РЕСТАВРАЦИЯ",
+      cabinet: "ТЕРАПИЯ · КАБ. №1",
+      title: "Лечение кариеса или замена выпавшей пломбы в тон зуба",
+      anesthesia: "Без боли (2 этапа)",
+      total: "от 4 500 ₽",
+      lines: [
+        ["01. Первичный осмотр терапевта и согласование цены", "0 ₽"],
+        ["02. Подбор оттенка материала точно под родную эмаль", "0 ₽"],
+        ["03. Световая пломба / художественная реставрация скола", "от 4 500 ₽"],
+        ["04. Многоступенчатая полировка и гарантия по договору", "включено"],
+      ],
+    },
+    "Бережное удаление зуба / зуба мудрости": {
+      code: "СМЕТА #03 · ХИРУРГИЯ",
+      cabinet: "ХИРУРГИЯ · КАБ. №2",
+      title: "Бережное удаление зуба или сложного зуба мудрости",
+      anesthesia: "Усиленная мягкая",
+      total: "от 6 500 ₽",
+      lines: [
+        ["01. Осмотр стоматолога-хирурга перед процедурой", "0 ₽"],
+        ["02. Двухэтапная анестезия с полным ожиданием заморозки", "включено"],
+        ["03. Атравматичное удаление зуба (в т.ч. «восьмёрки»)", "от 6 500 ₽"],
+        ["04. Памятка по уходу дома и бесплатный контрольный осмотр", "0 ₽"],
+      ],
+    },
+    "Семейный или детский осмотр (0 ₽)": {
+      code: "СМЕТА #04 · СЕМЕЙНЫЙ ПРИЁМ",
+      cabinet: "ДЕТСКИЙ И СЕМЕЙНЫЙ",
+      title: "Спокойный осмотр и лечение для ребёнка или всей семьи",
+      anesthesia: "Детский гель без слёз",
+      total: "осмотр 0 ₽ · лечение от 3 500 ₽",
+      lines: [
+        ["01. Бережное знакомство с врачом и осмотр без страха", "0 ₽"],
+        ["02. Профгигиена / герметизация фиссур для защиты эмали", "от 3 500 ₽"],
+        ["03. Бережное лечение детского или взрослого кариеса", "от 3 800 ₽"],
+        ["04. Запись 2–3 членов семьи на удобные окна подряд", "0 ₽"],
+      ],
+    },
+    "Коронки и восстановление зубов": {
+      code: "СМЕТА #05 · ОРТОПЕДИЯ",
+      cabinet: "ОРТОПЕДИЯ · КАБ. №2",
+      title: "Коронки из циркония и керамики · восстановление зубов",
+      anesthesia: "Комфортная 2-этапная",
+      total: "от 22 000 ₽",
+      lines: [
+        ["01. Первичная консультация врача-ортопеда и план", "0 ₽"],
+        ["02. Подбор естественного цвета и формы под свои зубы", "0 ₽"],
+        ["03. Коронка из диоксида циркония / цельной керамики", "от 22 000 ₽"],
+        ["04. Примерка и комфортная посадка по прикусу", "включено"],
+      ],
+    },
+  };
+
   const careSlip = document.getElementById("care-slip");
+  const slipCodeEl = document.getElementById("slip-code");
+  const slipCabinetEl = document.getElementById("slip-cabinet");
   const slipServiceName = document.getElementById("slip-service-name");
+  const slipAnesthesiaEl = document.getElementById("slip-anesthesia");
+  const slipLinesEl = document.getElementById("slip-lines");
+  const slipTotalEl = document.getElementById("slip-total-price");
+  const receiptTabs = Array.from(document.querySelectorAll(".receipt-tab"));
   const serviceSelect = document.getElementById("inp-service");
   const serviceHint = document.getElementById("service-picked-hint");
 
@@ -465,9 +553,33 @@
   let isJumpingToBooking = false;
   let jumpTimeoutId = null;
 
+  function populateSlipDOM(serviceLabel) {
+    const key =
+      serviceLabel && RECEIPT_CATALOG[serviceLabel]
+        ? serviceLabel
+        : "Бесплатный осмотр — врач сам подскажет на приёме (0 ₽)";
+    const data = RECEIPT_CATALOG[key];
+
+    if (slipCodeEl) slipCodeEl.textContent = data.code;
+    if (slipCabinetEl) slipCabinetEl.textContent = data.cabinet;
+    if (slipServiceName) slipServiceName.textContent = data.title;
+    if (slipAnesthesiaEl) slipAnesthesiaEl.textContent = data.anesthesia;
+    if (slipTotalEl) slipTotalEl.textContent = data.total;
+
+    if (slipLinesEl) {
+      slipLinesEl.innerHTML = data.lines
+        .map(([label, price]) => `<li><span>${label}</span><strong>${price}</strong></li>`)
+        .join("");
+    }
+
+    receiptTabs.forEach((tab) => {
+      tab.classList.toggle("is-active", tab.getAttribute("data-receipt-service") === key);
+    });
+  }
+
   function playSlipPrintIn(serviceLabel) {
-    if (serviceLabel && slipServiceName) {
-      slipServiceName.textContent = serviceLabel;
+    if (serviceLabel) {
+      populateSlipDOM(serviceLabel);
     }
     if (!careSlip || !hasGSAP || prefersReducedMotion) {
       isSlipVisible = true;
@@ -479,14 +591,14 @@
     isSlipAnimating = true;
 
     gsap.set(careSlip, {
-      yPercent: -92,
+      yPercent: -104,
       y: 0,
       x: 0,
       rotation: 0,
       autoAlpha: 1,
     });
 
-    const steps = [-80, -68, -56, -44, -32, -20, -10, -4, 0];
+    const feedSteps = [-94, -85, -76, -67, -58, -49, -40, -31, -22, -14, -6, 0];
     slipTl = gsap.timeline({
       onComplete: () => {
         isSlipVisible = true;
@@ -494,17 +606,18 @@
       },
     });
 
-    steps.forEach((pct) => {
+    feedSteps.forEach((pct, idx) => {
+      const isLast = idx === feedSteps.length - 1;
       slipTl.to(careSlip, {
         yPercent: pct,
         y: 0,
         x: 0,
         rotation: 0,
-        duration: 0.058,
-        ease: "power2.out",
+        duration: isLast ? 0.12 : 0.062,
+        ease: isLast ? "power3.out" : "power2.out",
       });
-      if (pct !== 0) {
-        slipTl.to(careSlip, { duration: 0.036 });
+      if (!isLast) {
+        slipTl.to(careSlip, { duration: 0.038 });
       }
     });
   }
@@ -514,7 +627,7 @@
     if (slipTl) slipTl.kill();
     isSlipAnimating = false;
 
-    const retractSteps = [-20, -48, -74, -94];
+    const retractSteps = [-15, -32, -50, -68, -86, -104];
     slipTl = gsap.timeline({
       onComplete: () => {
         isSlipVisible = false;
@@ -534,7 +647,7 @@
   }
 
   if (careSlip && hasGSAP && hasScrollTrigger && !prefersReducedMotion) {
-    gsap.set(careSlip, { yPercent: -94, autoAlpha: 1 });
+    gsap.set(careSlip, { yPercent: -104, autoAlpha: 1 });
 
     ScrollTrigger.create({
       trigger: "#booking",
@@ -570,19 +683,21 @@
       if (matched) serviceSelect.value = serviceVal;
     }
 
+    const catEntry = RECEIPT_CATALOG[serviceVal];
     if (serviceHint) {
-      serviceHint.textContent = `Выбрано: «${serviceVal}». Первичный осмотр врача — 0 ₽.`;
+      serviceHint.textContent = catEntry
+        ? `Выбрано: «${serviceVal}» (ориентир: ${catEntry.total}). Первичный осмотр врача — 0 ₽.`
+        : `Выбрано: «${serviceVal}». Первичный осмотр врача — 0 ₽.`;
     }
+
+    populateSlipDOM(serviceVal);
 
     if (scrollFirst) {
       isJumpingToBooking = true;
       if (jumpTimeoutId) clearTimeout(jumpTimeoutId);
-      if (slipServiceName && serviceVal) {
-        slipServiceName.textContent = serviceVal;
-      }
       if (careSlip && hasGSAP && !prefersReducedMotion) {
         if (slipTl) slipTl.kill();
-        gsap.set(careSlip, { yPercent: -94 });
+        gsap.set(careSlip, { yPercent: -104 });
         isSlipVisible = false;
         isSlipAnimating = false;
       }
@@ -595,6 +710,13 @@
       playSlipPrintIn(serviceVal);
     }
   }
+
+  receiptTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const val = tab.getAttribute("data-receipt-service");
+      if (val) selectServiceForBooking(val, false);
+    });
+  });
 
   document.querySelectorAll(".js-pick-service").forEach((btn) => {
     btn.addEventListener("click", (e) => {

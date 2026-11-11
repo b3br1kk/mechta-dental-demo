@@ -506,64 +506,126 @@
       </div>
     </section>
 
-    <!-- 6. BOOKING SECTION + FAMILY CARE INVITATION SLIP -->
+    <!-- 6. BOOKING SECTION + INTERACTIVE CLINIC RECEIPT / ESTIMATE SHEET -->
     <section class="booking-section" id="booking" aria-labelledby="booking-title">
       <div class="container">
         <div class="booking-header">
-          <span class="section-kicker">ЗАПИСЬ БЕЗ ДОЛГИХ РАЗГОВОРОВ · ПЕРВЫЙ ОСМОТР 0 ₽</span>
-          <h2 class="section-title" id="booking-title">Запишитесь на <span class="title-accent">спокойный осмотр</span> рядом с домом</h2>
+          <span class="section-kicker">ПРОЗРАЧНЫЙ РАСЧЁТ И ЗАПИСЬ · ПЕРВЫЙ ОСМОТР 0 ₽</span>
+          <h2 class="section-title" id="booking-title">Запишитесь на <span class="title-accent">спокойный осмотр</span> и честную смету</h2>
+        </div>
+
+        <!-- Quick Service Switcher Pills for the Receipt -->
+        <div class="receipt-tabs" id="receipt-tabs" role="tablist" aria-label="Выбор направления для предварительного чека">
+          <button type="button" class="receipt-tab is-active" data-receipt-service="Бесплатный осмотр — врач сам подскажет на приёме (0 ₽)">
+            <span>00 · Бесплатный осмотр и план</span>
+            <strong>0 ₽ · лечение от 4 500 ₽</strong>
+          </button>
+          <button type="button" class="receipt-tab" data-receipt-service="Болит зуб / реагирует на холодное (осмотр 0 ₽)">
+            <span>01 · Острая боль / нерв зуба</span>
+            <strong>от 4 800 ₽</strong>
+          </button>
+          <button type="button" class="receipt-tab" data-receipt-service="Лечение кариеса / замена пломбы">
+            <span>02 · Пломба и лечение кариеса</span>
+            <strong>от 4 500 ₽</strong>
+          </button>
+          <button type="button" class="receipt-tab" data-receipt-service="Бережное удаление зуба / зуба мудрости">
+            <span>03 · Удаление зуба / восьмёрки</span>
+            <strong>от 6 500 ₽</strong>
+          </button>
+          <button type="button" class="receipt-tab" data-receipt-service="Семейный или детский осмотр (0 ₽)">
+            <span>04 · Детский и семейный приём</span>
+            <strong>от 3 500 ₽</strong>
+          </button>
+          <button type="button" class="receipt-tab" data-receipt-service="Коронки и восстановление зубов">
+            <span>05 · Коронки и восстановление</span>
+            <strong>от 22 000 ₽</strong>
+          </button>
         </div>
 
         <div class="booking-grid">
-          <!-- LEFT: Tactile Family Care Slip (Animates on enter & resets on leave) -->
-          <div class="care-slip-wrap">
-            <div class="care-slip-slot" aria-hidden="true">
-              <span>ТАЛОН БЕРЕЖНОГО ПРИЁМА · МЕЧТА®</span>
+          <!-- LEFT: Interactive Thermal-Printer Clinic Receipt Dispenser -->
+          <div class="receipt-dispenser" id="receipt-dispenser">
+            <div class="receipt-dispenser__cap">
+              <div class="receipt-dispenser__cap-top">
+                <span class="receipt-dispenser__led"><span class="pulse-dot"></span> ТЕРМИНАЛ СМЕТЫ · МЕЧТА®</span>
+                <span class="receipt-dispenser__hint">Выберите повод обращения выше</span>
+              </div>
+              <div class="receipt-dispenser__slot-lip" aria-hidden="true"></div>
             </div>
-            <div class="care-slip-viewport">
-              <article class="care-slip" id="care-slip" aria-live="polite">
-                <div class="care-slip__head">
-                  <div>
-                    <span class="care-slip__kicker">СТОМАТОЛОГИЯ «МЕЧТА» · 8 МКР, Д. 13</span>
-                    <strong class="care-slip__title">Приглашение на первичный осмотр</strong>
+            <div class="receipt-dispenser__viewport">
+              <article class="receipt-card" id="care-slip" aria-live="polite">
+                <div class="receipt-card__header-center">
+                  <span class="receipt-card__kassa">ПРЕДВАРИТЕЛЬНЫЙ ЛИСТ РАСЧЁТА · ТАЛОН ПРИЁМА</span>
+                  <strong class="receipt-card__title">СЕМЕЙНАЯ СТОМАТОЛОГИЯ «МЕЧТА»</strong>
+                  <span class="receipt-card__addr">г. Нефтеюганск, 8-й мкр, д. 13 (1 этаж) · тел. +7 (3463) 27-14-41</span>
+                </div>
+
+                <div class="receipt-card__double-dash" aria-hidden="true"></div>
+
+                <div class="receipt-card__meta">
+                  <span>ДОКУМЕНТ: <strong id="slip-code">СМЕТА #00 · ОСМОТР И ПЛАН</strong></span>
+                  <span>КАБИНЕТ: <strong id="slip-cabinet">ТЕРАПИЯ · ДИАГНОСТИКА</strong></span>
+                </div>
+
+                <div class="receipt-card__double-dash" aria-hidden="true"></div>
+
+                <div class="receipt-card__subject">
+                  <div class="receipt-card__subject-main">
+                    <span class="receipt-card__label">ВЫБРАННЫЙ ПОВОД ОБРАЩЕНИЯ:</span>
+                    <strong class="receipt-card__service-name" id="slip-service-name">Бесплатный осмотр — врач сам подскажет на приёме (0 ₽)</strong>
                   </div>
-                  <span class="care-slip__badge">ОСМОТР 0 ₽</span>
+                  <div class="receipt-card__comfort-chip">
+                    <span>АНЕСТЕЗИЯ</span>
+                    <strong id="slip-anesthesia">2 этапа (гель + укол)</strong>
+                  </div>
                 </div>
 
-                <div class="care-slip__divider" aria-hidden="true"></div>
-
-                <div class="care-slip__selected">
-                  <span class="care-slip__label">ВЫБРАННЫЙ ПОВОД ОБРАЩЕНИЯ:</span>
-                  <strong class="care-slip__service" id="slip-service-name">Бесплатный осмотр — врач сам подскажет на приёме (0 ₽)</strong>
+                <div class="receipt-card__cols-head" aria-hidden="true">
+                  <span>СОСТАВ ПРИЁМА И ЭТАПЫ</span>
+                  <span>ОРИЕНТИР ЦЕНЫ</span>
                 </div>
 
-                <ul class="care-slip__list">
+                <ul class="receipt-card__lines" id="slip-lines">
                   <li>
-                    <span>01. Осмотр профильного врача и ответы на вопросы</span>
+                    <span>01. Первичный осмотр профильного врача (20–30 мин)</span>
                     <strong>0 ₽</strong>
                   </li>
                   <li>
-                    <span>02. Понятный план лечения и точная цена до старта</span>
+                    <span>02. Пошаговый план лечения и точная смета до старта</span>
                     <strong>0 ₽</strong>
                   </li>
                   <li>
-                    <span>03. Двухэтапное обезболивание (гель + мягкий укол)</span>
-                    <strong>по показаниям</strong>
+                    <span>03. Ориентир: световая пломба / лечение кариеса</span>
+                    <strong>от 4 500 ₽</strong>
                   </li>
                   <li>
-                    <span>04. Возможность записать сразу 2–3 членов семьи</span>
-                    <strong>доступно</strong>
+                    <span>04. Ориентир: бережное удаление / коронки под ключ</span>
+                    <strong>от 6 500 ₽</strong>
                   </li>
                 </ul>
 
-                <div class="care-slip__divider" aria-hidden="true"></div>
+                <div class="receipt-card__double-dash" aria-hidden="true"></div>
 
-                <div class="care-slip__free-box">
-                  <span>К ОПЛАТЕ ЗА ПЕРВИЧНЫЙ ОСМОТР И ПЛАН</span>
-                  <strong>0 ₽</strong>
+                <div class="receipt-card__totals">
+                  <div class="receipt-card__total-row receipt-card__total-row--free">
+                    <span>К ОПЛАТЕ ЗА ПЕРВИЧНЫЙ ОСМОТР И СМЕТУ</span>
+                    <strong>0 ₽</strong>
+                  </div>
+                  <div class="receipt-card__total-row receipt-card__total-row--est">
+                    <span>ОРИЕНТИР ПО ВЫБРАННОМУ ЛЕЧЕНИЮ</span>
+                    <strong id="slip-total-price">от 4 500 ₽ (после осмотра)</strong>
+                  </div>
                 </div>
 
-                <div class="care-slip__stamp">БЕЗ НАВЯЗЫВАНИЯ ЛИШНИХ УСЛУГ · ТЕЛ. +7 (3463) 27-14-41</div>
+                <div class="receipt-card__double-dash" aria-hidden="true"></div>
+
+                <div class="receipt-card__footer-block">
+                  <div class="receipt-card__stamp">ЦЕНА ФИКСИРУЕТСЯ ДО ЛЕЧЕНИЯ · БЕЗ СКРЫТЫХ ДОПЛАТ</div>
+                  <div class="receipt-card__barcode" aria-hidden="true"></div>
+                  <span class="receipt-card__code-sub">MCHT-86-NEFT-8MKR-13 · ОСТАНОВКА «УВД» · БЕЗ БОЛИ</span>
+                </div>
+
+                <div class="receipt-card__sawtooth" aria-hidden="true"></div>
               </article>
             </div>
           </div>
