@@ -14,14 +14,22 @@
 </head>
 <body>
 
-  <!-- 0. PRELOADER REVEAL — ZOOM-THROUGH ARCH PORTAL -->
+  <!-- 0. PRELOADER REVEAL — 5-PART ANGULAR BOTTOM-RIGHT TO TOP-LEFT CURTAIN & WORDMARK HANDOFF -->
   <div class="preloader" id="preloader" aria-hidden="true">
-    <div class="preloader__arch" id="preloader-arch">
-      <span class="preloader__kicker">СЕМЕЙНАЯ СТОМАТОЛОГИЯ · 8 МИКРОРАЙОН, Д. 13</span>
-      <div class="preloader__mask">
-        <div class="preloader__word" id="preloader-word">МЕЧТА<span class="reg-mark">®</span></div>
-      </div>
-      <span class="preloader__sub">Входим в клинику без страха и боли</span>
+    <div class="preloader__part" data-part="0">
+      <div class="preloader__mask"><div class="preloader__word">Мечта<span class="reg-mark">®</span></div></div>
+    </div>
+    <div class="preloader__part" data-part="1">
+      <div class="preloader__mask"><div class="preloader__word">Мечта<span class="reg-mark">®</span></div></div>
+    </div>
+    <div class="preloader__part" data-part="2">
+      <div class="preloader__mask"><div class="preloader__word">Мечта<span class="reg-mark">®</span></div></div>
+    </div>
+    <div class="preloader__part" data-part="3">
+      <div class="preloader__mask"><div class="preloader__word">Мечта<span class="reg-mark">®</span></div></div>
+    </div>
+    <div class="preloader__part" data-part="4">
+      <div class="preloader__mask"><div class="preloader__word">Мечта<span class="reg-mark">®</span></div></div>
     </div>
   </div>
 
@@ -38,10 +46,10 @@
     <div class="container topbar__inner">
       <a class="brand" href="#top" aria-label="Стоматология Мечта — На главную">
         <span class="brand__logo-wrap">
-          <img class="brand__logo-img" src="assets/logo-mark.png?v=1" alt="Логотип стоматологии Мечта" width="42" height="42">
+          <img class="brand__logo-img" src="assets/logo-mark.png?v=2" alt="Логотип стоматологии Мечта" width="42" height="42">
         </span>
         <span class="brand__text">
-          <span class="brand__name">МЕЧТА<span class="brand__reg">®</span></span>
+          <span class="brand__name">Мечта<span class="brand__reg">®</span></span>
           <span class="brand__sub">8 мкр, д. 13 · ост. «УВД»</span>
         </span>
       </a>
@@ -50,7 +58,7 @@
         <span class="nav__indicator" id="nav-indicator" aria-hidden="true"></span>
         <a class="nav__link is-active" href="#navigator">Что беспокоит?</a>
         <a class="nav__link" href="#about">О клинике</a>
-        <a class="nav__link" href="#services">Направления</a>
+        <a class="nav__link" href="#services">С чем приходят</a>
         <a class="nav__link" href="#praise">Отзывы семей</a>
         <a class="nav__link" href="#booking">Запись на осмотр</a>
         <a class="nav__link" href="#contacts">Контакты</a>
@@ -64,9 +72,8 @@
           </svg>
           <span>+7 (3463) 27-14-41</span>
         </a>
-        <a class="btn btn--accent btn--sm" href="#booking">
+        <a class="btn btn--accent btn--sm js-pick-service" href="#booking" data-service="Бесплатный осмотр — врач сам подскажет на приёме (0 ₽)">
           <span>Бесплатный осмотр</span>
-          <svg class="btn__arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
       </div>
     </div>
@@ -74,7 +81,7 @@
 
   <main id="top">
 
-    <!-- 1. ZOOM-THROUGH ARCH PORTAL HERO -->
+    <!-- 1. ARCHITECTURAL FAMILY HERO -->
     <section class="m-hero" aria-labelledby="hero-title">
       <div class="m-hero__portal" id="hero-portal">
         <img
@@ -87,6 +94,9 @@
           fetchpriority="high"
         >
         <div class="m-hero__scrim"></div>
+        <div class="m-hero__grid" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
       </div>
 
       <div class="m-hero__topbar hero-reveal">
@@ -99,19 +109,18 @@
 
       <div class="container m-hero__main">
         <div class="m-hero__left">
-          <span class="m-hero__eyebrow hero-reveal">СЕМЕЙНАЯ СТОМАТОЛОГИЯ РЯДОМ С ДОМОМ</span>
-          <h1 class="m-hero__title" id="hero-title">
-            Спокойное лечение зубов <span class="title-accent">для всей семьи</span> без страха и боли
+          <h1 class="m-hero__wordmark" id="hero-title">
+            Мечта<span class="reg-mark">®</span>
           </h1>
           <p class="m-hero__lead hero-reveal">
-            Помогаем при острой боли, бережно меняем пломбы и аккуратно удаляем зубы мудрости в 8-м микрорайоне. Начнём с бесплатного осмотра и назовём честную цену до лечения.
+            Спокойное лечение зубов для всей семьи в 8-м микрорайоне без страха и боли. Бесплатно проведём первый осмотр, бережно сохраним зуб и назовём честную цену до начала лечения.
           </p>
           <div class="m-hero__actions hero-reveal">
             <a class="btn btn--light-hero" href="#navigator">
               <span>Выбрать, что беспокоит</span>
-              <svg class="btn__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg class="btn__arrow btn__arrow--down" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
             </a>
-            <a class="btn btn--glass-hero" href="#booking">
+            <a class="btn btn--glass-hero js-pick-service" href="#booking" data-service="Бесплатный осмотр — врач сам подскажет на приёме (0 ₽)">
               <span>Записаться на осмотр (0 ₽)</span>
             </a>
           </div>
@@ -260,7 +269,6 @@
               <div class="symptom-stage__actions">
                 <button type="button" class="btn btn--accent js-pick-service" id="symptom-cta" data-service="Болит зуб / реагирует на холодное (осмотр 0 ₽)">
                   <span>Записаться с этой ситуацией</span>
-                  <span aria-hidden="true">→</span>
                 </button>
                 <a class="btn btn--ghost-dark" href="tel:+73463271441">Позвонить 27-14-41</a>
               </div>
@@ -304,134 +312,140 @@
       </div>
     </section>
 
-    <!-- 4. EXPANDING HORIZONTAL ACCORDION DECK (#services) -->
+    <!-- 4. SCROLL-DRIVEN EXPANDING HORIZONTAL ACCORDION DECK (#services) -->
     <section class="accordion-section" id="services" aria-labelledby="services-title">
-      <div class="container">
-        <div class="accordion-header">
-          <span class="section-kicker section-kicker--light">НАПРАВЛЕНИЯ И ДОСТУПНЫЕ ЦЕНЫ · НАЖМИТЕ НА ПАНЕЛЬ</span>
-          <h2 class="accordion-header__title" id="services-title">С чем чаще всего <span class="title-accent">приходят в «Мечту»</span></h2>
-        </div>
-
-        <div class="accordion-deck" id="accordion-deck">
-          <!-- PANEL 01 -->
-          <article class="acc-panel is-open" data-acc="0">
-            <button type="button" class="acc-panel__trigger" aria-expanded="true">
-              <span class="acc-panel__num">01</span>
-              <span class="acc-panel__spine-title">Кариес и замена пломб</span>
-            </button>
-            <div class="acc-panel__body">
-              <div class="acc-panel__text">
-                <div class="acc-panel__top">
-                  <span class="acc-panel__badge">Терапевт · 1 визит</span>
-                  <strong class="acc-panel__price">от 4 500 ₽ · Осмотр 0 ₽</strong>
-                </div>
-                <h3 class="acc-panel__title">Лечение кариеса, каналов и замена пломб</h3>
-                <ul class="acc-panel__list">
-                  <li><span>+</span> Бесплатный первичный осмотр и честная смета до старта (0 ₽)</li>
-                  <li><span>+</span> Восстановление выпавшей пломбы или скола в день обращения</li>
-                  <li><span>+</span> Лечение пульпита и каналов под двухэтапной анестезией</li>
-                  <li><span>+</span> Естественный цвет пломбы, которая служит годами</li>
-                </ul>
-                <button type="button" class="btn btn--accent js-pick-service" data-service="Лечение кариеса / замена пломбы">
-                  <span>Выбрать для записи</span>
-                  <span aria-hidden="true">→</span>
-                </button>
-              </div>
-              <div class="acc-panel__media">
-                <img src="assets/symptom-02-filling.webp?v=1" alt="Надёжные пломбы и реставрация зубов в клинике Мечта" width="720" height="540" loading="lazy">
+      <div class="accordion-pin" id="accordion-pin">
+        <div class="container">
+          <div class="accordion-header">
+            <div>
+              <span class="section-kicker section-kicker--light">НАПРАВЛЕНИЯ И ДОСТУПНЫЕ ЦЕНЫ · ЛИСТАЙТЕ ИЛИ НАЖМИТЕ НА ПАНЕЛЬ</span>
+              <h2 class="accordion-header__title" id="services-title">С чем чаще всего <span class="title-accent">приходят в «Мечту»</span></h2>
+            </div>
+            <div class="accordion-progress" aria-hidden="true">
+              <span class="accordion-progress__count" id="acc-count">01 / 04</span>
+              <div class="accordion-progress__bar">
+                <div class="accordion-progress__fill" id="acc-fill"></div>
               </div>
             </div>
-          </article>
+          </div>
 
-          <!-- PANEL 02 -->
-          <article class="acc-panel" data-acc="1">
-            <button type="button" class="acc-panel__trigger" aria-expanded="false">
-              <span class="acc-panel__num">02</span>
-              <span class="acc-panel__spine-title">Удаление и «восьмёрки»</span>
-            </button>
-            <div class="acc-panel__body">
-              <div class="acc-panel__text">
-                <div class="acc-panel__top">
-                  <span class="acc-panel__badge">Хирург · Без боли</span>
-                  <strong class="acc-panel__price">от 6 500 ₽ · Осмотр 0 ₽</strong>
+          <div class="accordion-deck" id="accordion-deck">
+            <!-- PANEL 01 -->
+            <article class="acc-panel is-open" data-acc="0">
+              <button type="button" class="acc-panel__trigger" aria-expanded="true">
+                <span class="acc-panel__num">01</span>
+                <span class="acc-panel__spine-title">Кариес и замена пломб</span>
+              </button>
+              <div class="acc-panel__body">
+                <div class="acc-panel__text">
+                  <div class="acc-panel__top">
+                    <span class="acc-panel__badge">Терапевт · 1 визит</span>
+                    <strong class="acc-panel__price">от 4 500 ₽ · Осмотр 0 ₽</strong>
+                  </div>
+                  <h3 class="acc-panel__title">Лечение кариеса, каналов и замена пломб</h3>
+                  <ul class="acc-panel__list">
+                    <li><span>+</span> Бесплатный первичный осмотр и честная смета до старта (0 ₽)</li>
+                    <li><span>+</span> Восстановление выпавшей пломбы или скола в день обращения</li>
+                    <li><span>+</span> Лечение пульпита и каналов под двухэтапной анестезией</li>
+                    <li><span>+</span> Естественный цвет пломбы, которая служит годами</li>
+                  </ul>
+                  <button type="button" class="btn btn--accent js-pick-service" data-service="Лечение кариеса / замена пломбы">
+                    <span>Выбрать для записи</span>
+                  </button>
                 </div>
-                <h3 class="acc-panel__title">Бережное удаление зубов и сложных «восьмёрок»</h3>
-                <ul class="acc-panel__list">
-                  <li><span>+</span> Осмотр хирурга перед процедурой — бесплатно (0 ₽)</li>
-                  <li><span>+</span> Ждём полного действия анестезии без малейшей спешки</li>
-                  <li><span>+</span> Аккуратное удаление сложных зубов мудрости без стресса</li>
-                  <li><span>+</span> Памятка по заживлению и бесплатный контрольный осмотр</li>
-                </ul>
-                <button type="button" class="btn btn--accent js-pick-service" data-service="Бережное удаление зуба / зуба мудрости">
-                  <span>Выбрать для записи</span>
-                  <span aria-hidden="true">→</span>
-                </button>
+                <div class="acc-panel__media">
+                  <img src="assets/symptom-02-filling.webp?v=1" alt="Надёжные пломбы и реставрация зубов в клинике Мечта" width="720" height="540" loading="lazy">
+                </div>
               </div>
-              <div class="acc-panel__media">
-                <img src="assets/symptom-03-wisdom.webp?v=1" alt="Бережное удаление зубов мудрости в стоматологии Мечта" width="720" height="540" loading="lazy">
-              </div>
-            </div>
-          </article>
+            </article>
 
-          <!-- PANEL 03 -->
-          <article class="acc-panel" data-acc="2">
-            <button type="button" class="acc-panel__trigger" aria-expanded="false">
-              <span class="acc-panel__num">03</span>
-              <span class="acc-panel__spine-title">Семейный и детский приём</span>
-            </button>
-            <div class="acc-panel__body">
-              <div class="acc-panel__text">
-                <div class="acc-panel__top">
-                  <span class="acc-panel__badge">Для всей семьи</span>
-                  <strong class="acc-panel__price">Осмотр 0 ₽</strong>
+            <!-- PANEL 02 -->
+            <article class="acc-panel" data-acc="1">
+              <button type="button" class="acc-panel__trigger" aria-expanded="false">
+                <span class="acc-panel__num">02</span>
+                <span class="acc-panel__spine-title">Удаление и «восьмёрки»</span>
+              </button>
+              <div class="acc-panel__body">
+                <div class="acc-panel__text">
+                  <div class="acc-panel__top">
+                    <span class="acc-panel__badge">Хирург · Без боли</span>
+                    <strong class="acc-panel__price">от 6 500 ₽ · Осмотр 0 ₽</strong>
+                  </div>
+                  <h3 class="acc-panel__title">Бережное удаление зубов и сложных «восьмёрок»</h3>
+                  <ul class="acc-panel__list">
+                    <li><span>+</span> Осмотр хирурга перед процедурой — бесплатно (0 ₽)</li>
+                    <li><span>+</span> Ждём полного действия анестезии без малейшей спешки</li>
+                    <li><span>+</span> Аккуратное удаление сложных зубов мудрости без стресса</li>
+                    <li><span>+</span> Памятка по заживлению и бесплатный контрольный осмотр</li>
+                  </ul>
+                  <button type="button" class="btn btn--accent js-pick-service" data-service="Бережное удаление зуба / зуба мудрости">
+                    <span>Выбрать для записи</span>
+                  </button>
                 </div>
-                <h3 class="acc-panel__title">Заботливый приём для родителей и детей</h3>
-                <ul class="acc-panel__list">
-                  <li><span>+</span> Можно записать всю семью на удобное время подряд</li>
-                  <li><span>+</span> Спокойное знакомство ребёнка с врачом без слёз и пугающих слов</li>
-                  <li><span>+</span> Профессиональная чистка и укрепление эмали</li>
-                  <li><span>+</span> Постоянный семейный врач, который знает вашу историю</li>
-                </ul>
-                <button type="button" class="btn btn--accent js-pick-service" data-service="Семейный или детский осмотр (0 ₽)">
-                  <span>Выбрать для записи</span>
-                  <span aria-hidden="true">→</span>
-                </button>
+                <div class="acc-panel__media">
+                  <img src="assets/symptom-03-wisdom.webp?v=1" alt="Бережное удаление зубов мудрости в стоматологии Мечта" width="720" height="540" loading="lazy">
+                </div>
               </div>
-              <div class="acc-panel__media">
-                <img src="assets/symptom-04-family.webp?v=1" alt="Семейный приём в стоматологии Мечта" width="720" height="540" loading="lazy">
-              </div>
-            </div>
-          </article>
+            </article>
 
-          <!-- PANEL 04 -->
-          <article class="acc-panel" data-acc="3">
-            <button type="button" class="acc-panel__trigger" aria-expanded="false">
-              <span class="acc-panel__num">04</span>
-              <span class="acc-panel__spine-title">Коронки и имплантация</span>
-            </button>
-            <div class="acc-panel__body">
-              <div class="acc-panel__text">
-                <div class="acc-panel__top">
-                  <span class="acc-panel__badge">Ортопед и хирург</span>
-                  <strong class="acc-panel__price">от 22 000 ₽ · Осмотр 0 ₽</strong>
+            <!-- PANEL 03 -->
+            <article class="acc-panel" data-acc="2">
+              <button type="button" class="acc-panel__trigger" aria-expanded="false">
+                <span class="acc-panel__num">03</span>
+                <span class="acc-panel__spine-title">Семейный и детский приём</span>
+              </button>
+              <div class="acc-panel__body">
+                <div class="acc-panel__text">
+                  <div class="acc-panel__top">
+                    <span class="acc-panel__badge">Для всей семьи</span>
+                    <strong class="acc-panel__price">Осмотр 0 ₽</strong>
+                  </div>
+                  <h3 class="acc-panel__title">Заботливый приём для родителей и детей</h3>
+                  <ul class="acc-panel__list">
+                    <li><span>+</span> Можно записать всю семью на удобное время подряд</li>
+                    <li><span>+</span> Спокойное знакомство ребёнка с врачом без слёз и пугающих слов</li>
+                    <li><span>+</span> Профессиональная чистка и укрепление эмали</li>
+                    <li><span>+</span> Постоянный семейный врач, который знает вашу историю</li>
+                  </ul>
+                  <button type="button" class="btn btn--accent js-pick-service" data-service="Семейный или детский осмотр (0 ₽)">
+                    <span>Выбрать для записи</span>
+                  </button>
                 </div>
-                <h3 class="acc-panel__title">Восстановление утраченных и разрушенных зубов</h3>
-                <ul class="acc-panel__list">
-                  <li><span>+</span> Бесплатная консультация ортопеда и понятный план (0 ₽)</li>
-                  <li><span>+</span> Прочные коронки и протезы под естественный цвет зубов</li>
-                  <li><span>+</span> Надёжная имплантация с поэтапной оплатой</li>
-                  <li><span>+</span> Официальная гарантия и комфортная посадка по прикусу</li>
-                </ul>
-                <button type="button" class="btn btn--accent js-pick-service" data-service="Коронки и восстановление зубов">
-                  <span>Выбрать для записи</span>
-                  <span aria-hidden="true">→</span>
-                </button>
+                <div class="acc-panel__media">
+                  <img src="assets/symptom-04-family.webp?v=1" alt="Семейный приём в стоматологии Мечта" width="720" height="540" loading="lazy">
+                </div>
               </div>
-              <div class="acc-panel__media">
-                <img src="assets/symptom-01-pain.webp?v=1" alt="Консультация ортопеда в клинике Мечта" width="720" height="540" loading="lazy">
+            </article>
+
+            <!-- PANEL 04 -->
+            <article class="acc-panel" data-acc="3">
+              <button type="button" class="acc-panel__trigger" aria-expanded="false">
+                <span class="acc-panel__num">04</span>
+                <span class="acc-panel__spine-title">Коронки и имплантация</span>
+              </button>
+              <div class="acc-panel__body">
+                <div class="acc-panel__text">
+                  <div class="acc-panel__top">
+                    <span class="acc-panel__badge">Ортопед и хирург</span>
+                    <strong class="acc-panel__price">от 22 000 ₽ · Осмотр 0 ₽</strong>
+                  </div>
+                  <h3 class="acc-panel__title">Восстановление утраченных и разрушенных зубов</h3>
+                  <ul class="acc-panel__list">
+                    <li><span>+</span> Бесплатная консультация ортопеда и понятный план (0 ₽)</li>
+                    <li><span>+</span> Прочные коронки и протезы под естественный цвет зубов</li>
+                    <li><span>+</span> Надёжная имплантация с поэтапной оплатой</li>
+                    <li><span>+</span> Официальная гарантия и комфортная посадка по прикусу</li>
+                  </ul>
+                  <button type="button" class="btn btn--accent js-pick-service" data-service="Коронки и восстановление зубов">
+                    <span>Выбрать для записи</span>
+                  </button>
+                </div>
+                <div class="acc-panel__media">
+                  <img src="assets/symptom-01-pain.webp?v=1" alt="Консультация ортопеда в клинике Мечта" width="720" height="540" loading="lazy">
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+          </div>
         </div>
       </div>
     </section>
@@ -591,7 +605,6 @@
 
             <button type="submit" class="btn btn--accent btn--full">
               <span>Записаться</span>
-              <span aria-hidden="true">→</span>
             </button>
 
             <p class="booking-form__feedback" id="form-feedback" role="status" aria-live="polite" hidden></p>
@@ -636,7 +649,6 @@
               </a>
               <a class="btn btn--outline-light" href="https://yandex.ru/maps/?pt=72.607850,61.088420&z=17&l=map" target="_blank" rel="noopener noreferrer">
                 <span>Открыть в Яндекс Картах</span>
-                <span aria-hidden="true">↗</span>
               </a>
             </div>
           </div>
@@ -644,7 +656,7 @@
           <div class="map-widget">
             <div class="map-widget__header">
               <div class="map-widget__brand">
-                <img class="map-widget__logo" src="assets/logo-map.png?v=1" alt="Эмблема клиники Мечта" width="40" height="40">
+                <img class="map-widget__logo" src="assets/logo-map.png?v=2" alt="Эмблема клиники Мечта" width="40" height="40">
                 <strong class="map-widget__title">Мы на карте</strong>
               </div>
               <span class="map-widget__pin-badge">

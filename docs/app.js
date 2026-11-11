@@ -111,92 +111,146 @@
   }
 
   /* --------------------------------------------------------------------------
-     3. PRELOADER -> ZOOM-THROUGH ARCH PORTAL HERO REVEAL
+     3. PRELOADER -> 5-PART ANGULAR BOTTOM-RIGHT TO TOP-LEFT CURTAIN & WORDMARK HANDOFF
      -------------------------------------------------------------------------- */
-  function initArchPortalReveal() {
+  function initAngularCurtainReveal() {
     const preloader = document.getElementById("preloader");
-    const preloaderArch = document.getElementById("preloader-arch");
-    const preloaderWord = document.getElementById("preloader-word");
+    const parts = preloader ? Array.from(preloader.querySelectorAll(".preloader__part")) : [];
+    const masks = preloader ? Array.from(preloader.querySelectorAll(".preloader__mask")) : [];
+    const words = preloader ? Array.from(preloader.querySelectorAll(".preloader__word")) : [];
+    const heroTitle = document.getElementById("hero-title");
     const heroPortal = document.getElementById("hero-portal");
-    const heroImg = document.getElementById("hero-bg-img");
     const heroReveals = document.querySelectorAll(".hero-reveal");
 
-    if (!preloader || !hasGSAP || prefersReducedMotion) {
-      if (preloader) preloader.style.display = "none";
+    if (!preloader || !parts.length || !heroTitle || !hasGSAP || prefersReducedMotion || window.scrollY > 80) {
+      if (preloader) preloader.classList.add("is-hidden");
       return;
     }
 
-    gsap.set(preloaderWord, { y: 0, yPercent: 112, color: "#181D1A" });
-    gsap.set(preloaderArch, { scale: 0.94, autoAlpha: 1 });
-    gsap.set(heroPortal, {
-      clipPath: "inset(12% 24% 12% 24% round 240px 240px 28px 28px)",
+    const heroRect = heroTitle.getBoundingClientRect();
+    const startOffsetX = Math.round(
+      Math.max(0, (window.innerWidth - heroRect.width) * 0.45 - heroRect.left)
+    );
+    const startOffsetY = Math.round(
+      (window.innerHeight - heroRect.height) * 0.52 - heroRect.top
+    );
+
+    function diagBandPoly(s1, s2) {
+      return `polygon(${s1 - 200}% 200%, ${s1 + 100}% -100%, ${s2 + 100}% -100%, ${s2 - 200}% 200%)`;
+    }
+
+    const bands = [
+      { s1: 0, s2Start: 40.4 },
+      { s1: 40, s2Start: 80.4 },
+      { s1: 80, s2Start: 120.4 },
+      { s1: 120, s2Start: 160.4 },
+      { s1: 160, s2Start: 200 },
+    ];
+
+    parts.forEach((part, idx) => {
+      const b = bands[idx];
+      if (b) gsap.set(part, { clipPath: diagBandPoly(b.s1, b.s2Start) });
     });
-    if (heroImg) gsap.set(heroImg, { scale: 1.15 });
-    gsap.set(heroReveals, { y: 24, autoAlpha: 0 });
+
+    gsap.set(masks, {
+      left: heroRect.left + startOffsetX,
+      top: heroRect.top + startOffsetY,
+      x: 0,
+      y: 0,
+      opacity: 1,
+    });
+    gsap.set(words, { y: 0, yPercent: 112, color: "#181D1A" });
+    gsap.set(heroTitle, { x: startOffsetX, y: startOffsetY });
+    gsap.set(heroReveals, { y: 26, autoAlpha: 0 });
+    if (heroPortal) {
+      gsap.set(heroPortal, { xPercent: 6, yPercent: 6, scale: 1.06 });
+    }
 
     const tl = gsap.timeline({
-      defaults: { ease: "power3.out" },
       onComplete: () => {
-        preloader.style.display = "none";
+        gsap.set(heroTitle, { clearProps: "transform" });
+        if (heroPortal) gsap.set(heroPortal, { clearProps: "transform" });
+        preloader.classList.add("is-hidden");
         if (hasScrollTrigger) ScrollTrigger.refresh();
       },
     });
 
-    tl.to(preloaderWord, {
-      y: 0,
-      yPercent: 0,
-      duration: 0.56,
-    })
-      .to(
-        preloaderArch,
+    // Beat 1: Dark wordmark rises out of baseline mask in the center of the loading screen
+    tl.to(
+      words,
+      {
+        y: 0,
+        yPercent: 0,
+        duration: 0.62,
+        ease: "power4.out",
+      },
+      0.05
+    );
+
+    // Beat 2: All 5 angled diagonal parts wipe from bottom-right corner toward top-left corner while wordmark glides into Hero
+    parts.forEach((part, idx) => {
+      const b = bands[idx];
+      if (!b) return;
+      tl.to(
+        part,
         {
-          scale: 2.25,
-          autoAlpha: 0,
-          duration: 0.72,
-          ease: "expo.in",
+          clipPath: diagBandPoly(b.s1, b.s1),
+          duration: 0.94,
+          ease: "expo.inOut",
         },
-        "+=0.14"
-      )
-      .to(
-        preloader,
-        {
-          autoAlpha: 0,
-          duration: 0.45,
-          ease: "power2.out",
-        },
-        "-=0.35"
-      )
-      .to(
+        0.72
+      );
+    });
+
+    tl.to(
+      masks,
+      {
+        x: -startOffsetX,
+        y: -startOffsetY,
+        duration: 0.94,
+        ease: "expo.inOut",
+      },
+      0.72
+    ).to(
+      heroTitle,
+      {
+        x: 0,
+        y: 0,
+        duration: 0.94,
+        ease: "expo.inOut",
+      },
+      0.72
+    );
+
+    if (heroPortal) {
+      tl.to(
         heroPortal,
         {
-          clipPath: "inset(0% 0% 0% 0% round 0px 0px 0px 0px)",
-          duration: 0.96,
-          ease: "expo.out",
-        },
-        "-=0.58"
-      )
-      .to(
-        heroImg,
-        {
+          xPercent: 0,
+          yPercent: 0,
           scale: 1,
-          duration: 1.15,
-          ease: "power3.out",
+          duration: 0.94,
+          ease: "expo.inOut",
         },
-        "-=0.92"
-      )
-      .to(
-        heroReveals,
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.62,
-          stagger: 0.08,
-        },
-        "-=0.55"
+        0.72
       );
+    }
+
+    // Beat 3: Hero UI elements rise smoothly after angular curtains open
+    tl.to(
+      heroReveals,
+      {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.58,
+        stagger: 0.06,
+        ease: "power3.out",
+      },
+      1.38
+    );
   }
 
-  initArchPortalReveal();
+  initAngularCurtainReveal();
 
   /* --------------------------------------------------------------------------
      4. INTERACTIVE SYMPTOM NAVIGATOR ("ЧТО ВАС БЕСПОКОИТ ПРЯМО СЕЙЧАС?")
@@ -329,32 +383,75 @@
   });
 
   /* --------------------------------------------------------------------------
-     5. HORIZONTAL EXPANDING ACCORDION DECK (#services)
+     5. SCROLL-DRIVEN HORIZONTAL EXPANDING ACCORDION DECK (#services)
+        - Generous initial dwell (0.00 -> 0.28) so user calmly reads Panel 01 first
+        - Smooth scroll-driven transitions across Panels 01 -> 02 -> 03 -> 04
+        - Manual click also supported
      -------------------------------------------------------------------------- */
-  const accPanels = document.querySelectorAll(".acc-panel");
+  const accPanels = Array.from(document.querySelectorAll(".acc-panel"));
+  const accCountEl = document.getElementById("acc-count");
+  const accFillEl = document.getElementById("acc-fill");
+  const accPinWrap = document.getElementById("accordion-pin");
+  let activeAccIdx = 0;
 
-  accPanels.forEach((panel) => {
-    const trigger = panel.querySelector(".acc-panel__trigger");
-    const openPanel = () => {
-      accPanels.forEach((p) => {
-        const isCurrent = p === panel;
-        p.classList.toggle("is-open", isCurrent);
-        const btn = p.querySelector(".acc-panel__trigger");
-        if (btn) btn.setAttribute("aria-expanded", isCurrent ? "true" : "false");
-      });
-    };
-    if (trigger) {
-      trigger.addEventListener("click", openPanel);
-    }
-    panel.addEventListener("mouseenter", () => {
-      if (window.innerWidth > 1080) openPanel();
+  function setActiveAccordionPanel(idx) {
+    if (idx === activeAccIdx && accPanels[idx]?.classList.contains("is-open")) return;
+    activeAccIdx = idx;
+    accPanels.forEach((p, i) => {
+      const isCurrent = i === idx;
+      p.classList.toggle("is-open", isCurrent);
+      const btn = p.querySelector(".acc-panel__trigger");
+      if (btn) btn.setAttribute("aria-expanded", isCurrent ? "true" : "false");
     });
+    if (accCountEl) accCountEl.textContent = `0${idx + 1} / 04`;
+  }
+
+  accPanels.forEach((panel, idx) => {
+    const trigger = panel.querySelector(".acc-panel__trigger");
+    if (trigger) {
+      trigger.addEventListener("click", () => {
+        setActiveAccordionPanel(idx);
+      });
+    }
   });
+
+  if (accPinWrap && accPanels.length === 4 && hasGSAP && hasScrollTrigger && !prefersReducedMotion) {
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 1081px)", () => {
+      ScrollTrigger.create({
+        trigger: accPinWrap,
+        pin: true,
+        scrub: 0.35,
+        start: "top top",
+        end: "+=2700",
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          // Generous reading hold on Panel 01 (first 28% of scroll) so it never switches prematurely
+          let targetIdx = 0;
+          if (p < 0.28) {
+            targetIdx = 0;
+          } else if (p < 0.54) {
+            targetIdx = 1;
+          } else if (p < 0.78) {
+            targetIdx = 2;
+          } else {
+            targetIdx = 3;
+          }
+          setActiveAccordionPanel(targetIdx);
+          if (accFillEl) {
+            accFillEl.style.width = `${Math.max(25, Math.round(p * 100))}%`;
+          }
+        },
+      });
+    });
+  }
 
   /* --------------------------------------------------------------------------
      6. TACTILE FAMILY CARE SLIP (#booking)
         - Vertical stepped print-in from .care-slip-slot (x: 0, rotation: 0)
-        - Scroll-Then-Act (1220ms delay when triggered via .js-pick-service)
+        - Scroll-Then-Act (1200ms delay when triggered via .js-pick-service)
+        - Strict lock (isJumpingToBooking + isSlipAnimating) so it NEVER plays twice!
         - Reset-On-Leave (retracts when scrolling away so it replays on return)
      -------------------------------------------------------------------------- */
   const careSlip = document.getElementById("care-slip");
@@ -364,6 +461,9 @@
 
   let slipTl = null;
   let isSlipVisible = false;
+  let isSlipAnimating = false;
+  let isJumpingToBooking = false;
+  let jumpTimeoutId = null;
 
   function playSlipPrintIn(serviceLabel) {
     if (serviceLabel && slipServiceName) {
@@ -371,10 +471,12 @@
     }
     if (!careSlip || !hasGSAP || prefersReducedMotion) {
       isSlipVisible = true;
+      isSlipAnimating = false;
       return;
     }
 
     if (slipTl) slipTl.kill();
+    isSlipAnimating = true;
 
     gsap.set(careSlip, {
       yPercent: -92,
@@ -388,6 +490,7 @@
     slipTl = gsap.timeline({
       onComplete: () => {
         isSlipVisible = true;
+        isSlipAnimating = false;
       },
     });
 
@@ -409,6 +512,7 @@
   function playSlipRetractOut() {
     if (!careSlip || !hasGSAP || prefersReducedMotion) return;
     if (slipTl) slipTl.kill();
+    isSlipAnimating = false;
 
     const retractSteps = [-20, -48, -74, -94];
     slipTl = gsap.timeline({
@@ -437,25 +541,33 @@
       start: "top 68%",
       end: "bottom 18%",
       onEnter: () => {
-        if (!isSlipVisible) playSlipPrintIn();
+        if (!isSlipVisible && !isSlipAnimating && !isJumpingToBooking) {
+          playSlipPrintIn();
+        }
       },
       onEnterBack: () => {
-        if (!isSlipVisible) playSlipPrintIn();
+        if (!isSlipVisible && !isSlipAnimating && !isJumpingToBooking) {
+          playSlipPrintIn();
+        }
       },
       onLeave: () => {
-        playSlipRetractOut();
+        if (!isJumpingToBooking) playSlipRetractOut();
       },
       onLeaveBack: () => {
-        playSlipRetractOut();
+        if (!isJumpingToBooking) playSlipRetractOut();
       },
     });
   }
 
   function selectServiceForBooking(serviceVal, scrollFirst = false) {
     if (serviceSelect) {
-      const opts = Array.from(serviceSelect.options);
-      const match = opts.find((o) => o.value === serviceVal);
-      if (match) serviceSelect.value = serviceVal;
+      let matched = false;
+      Array.from(serviceSelect.options).forEach((o) => {
+        const isMatch = o.value === serviceVal;
+        o.selected = isMatch;
+        if (isMatch) matched = true;
+      });
+      if (matched) serviceSelect.value = serviceVal;
     }
 
     if (serviceHint) {
@@ -463,13 +575,20 @@
     }
 
     if (scrollFirst) {
+      isJumpingToBooking = true;
+      if (jumpTimeoutId) clearTimeout(jumpTimeoutId);
+      if (slipServiceName && serviceVal) {
+        slipServiceName.textContent = serviceVal;
+      }
       if (careSlip && hasGSAP && !prefersReducedMotion) {
         if (slipTl) slipTl.kill();
         gsap.set(careSlip, { yPercent: -94 });
         isSlipVisible = false;
+        isSlipAnimating = false;
       }
-      smoothScrollTo("#booking", -72);
-      setTimeout(() => {
+      smoothScrollTo("#booking", 48);
+      jumpTimeoutId = setTimeout(() => {
+        isJumpingToBooking = false;
         playSlipPrintIn(serviceVal);
       }, 1220);
     } else {
