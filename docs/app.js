@@ -384,17 +384,20 @@
 
   /* --------------------------------------------------------------------------
      5. SCROLL-DRIVEN HORIZONTAL EXPANDING ACCORDION DECK (#services)
-        - Generous initial dwell (0.00 -> 0.28) so user calmly reads Panel 01 first
-        - Smooth scroll-driven transitions across Panels 01 -> 02 -> 03 -> 04
-        - Manual click also supported
+        - Zero-reflow fixed-height deck (500px) & constant-width inner body
+        - Continuous GSAP ScrollTrigger timeline (scrub: 0.42) with constant-sum
+          flexGrow ((1 - p) + p = 1.0 at every frame) so the deck NEVER jerks!
+        - Calm reading hold on every panel (01, 02, 03, 04)
      -------------------------------------------------------------------------- */
   const accPanels = Array.from(document.querySelectorAll(".acc-panel"));
+  const accBodies = accPanels.map((p) => p.querySelector(".acc-panel__body"));
   const accCountEl = document.getElementById("acc-count");
   const accFillEl = document.getElementById("acc-fill");
   const accPinWrap = document.getElementById("accordion-pin");
   let activeAccIdx = 0;
+  let accScrollTrigger = null;
 
-  function setActiveAccordionPanel(idx) {
+  function updateAccordionActiveMeta(idx) {
     if (idx === activeAccIdx && accPanels[idx]?.classList.contains("is-open")) return;
     activeAccIdx = idx;
     accPanels.forEach((p, i) => {
@@ -410,7 +413,36 @@
     const trigger = panel.querySelector(".acc-panel__trigger");
     if (trigger) {
       trigger.addEventListener("click", () => {
-        setActiveAccordionPanel(idx);
+        if (accScrollTrigger && window.innerWidth >= 1081) {
+          // Scroll smoothly to the exact reading hold position for this panel
+          const targetProgresses = [0.08, 0.39, 0.67, 0.94];
+          const targetY =
+            accScrollTrigger.start +
+            (accScrollTrigger.end - accScrollTrigger.start) * targetProgresses[idx];
+          if (lenis) {
+            lenis.scrollTo(targetY, { duration: 0.85 });
+          } else {
+            window.scrollTo({ top: targetY, behavior: "smooth" });
+          }
+        } else {
+          updateAccordionActiveMeta(idx);
+          if (hasGSAP) {
+            accPanels.forEach((p, i) => {
+              gsap.to(p, {
+                flexGrow: i === idx ? 1 : 0.0001,
+                duration: 0.45,
+                ease: "sine.inOut",
+              });
+              if (accBodies[i]) {
+                gsap.to(accBodies[i], {
+                  opacity: i === idx ? 1 : 0,
+                  duration: 0.35,
+                  ease: "sine.inOut",
+                });
+              }
+            });
+          }
+        }
       });
     }
   });
@@ -418,32 +450,72 @@
   if (accPinWrap && accPanels.length === 4 && hasGSAP && hasScrollTrigger && !prefersReducedMotion) {
     const mm = gsap.matchMedia();
     mm.add("(min-width: 1081px)", () => {
-      ScrollTrigger.create({
-        trigger: accPinWrap,
-        pin: true,
-        scrub: 0.35,
-        start: "top top",
-        end: "+=2700",
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const p = self.progress;
-          // Generous reading hold on Panel 01 (first 28% of scroll) so it never switches prematurely
-          let targetIdx = 0;
-          if (p < 0.28) {
-            targetIdx = 0;
-          } else if (p < 0.54) {
-            targetIdx = 1;
-          } else if (p < 0.78) {
-            targetIdx = 2;
-          } else {
-            targetIdx = 3;
-          }
-          setActiveAccordionPanel(targetIdx);
-          if (accFillEl) {
-            accFillEl.style.width = `${Math.max(25, Math.round(p * 100))}%`;
-          }
+      gsap.set(accPanels, {
+        flexGrow: (i) => (i === 0 ? 1 : 0.0001),
+        flexShrink: 0,
+        flexBasis: "88px",
+      });
+      gsap.set(accBodies, {
+        opacity: (i) => (i === 0 ? 1 : 0),
+      });
+
+      const tlAcc = gsap.timeline({
+        scrollTrigger: {
+          trigger: accPinWrap,
+          pin: true,
+          scrub: 0.42,
+          start: "top top",
+          end: "+=2800",
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const p = self.progress;
+            let idx = 0;
+            if (p < 0.27) idx = 0;
+            else if (p < 0.53) idx = 1;
+            else if (p < 0.79) idx = 2;
+            else idx = 3;
+            updateAccordionActiveMeta(idx);
+            if (accFillEl) {
+              accFillEl.style.width = `${Math.max(25, Math.round(p * 100))}%`;
+            }
+          },
         },
       });
+
+      accScrollTrigger = tlAcc.scrollTrigger;
+
+      // 1. Calm arrival dwell on Panel 01 (22% of scroll)
+      tlAcc.to(accPanels[0], { flexGrow: 1, duration: 0.22, ease: "none" });
+
+      // 2. Smooth constant-sum transition: Panel 01 -> Panel 02
+      tlAcc
+        .to(accPanels[0], { flexGrow: 0.0001, duration: 0.16, ease: "sine.inOut" }, "step1")
+        .to(accBodies[0], { opacity: 0, duration: 0.12, ease: "sine.inOut" }, "step1")
+        .to(accPanels[1], { flexGrow: 1, duration: 0.16, ease: "sine.inOut" }, "step1")
+        .to(accBodies[1], { opacity: 1, duration: 0.14, ease: "sine.inOut" }, "step1+=0.02");
+
+      // 3. Reading hold on Panel 02
+      tlAcc.to(accPanels[1], { flexGrow: 1, duration: 0.14, ease: "none" });
+
+      // 4. Smooth constant-sum transition: Panel 02 -> Panel 03
+      tlAcc
+        .to(accPanels[1], { flexGrow: 0.0001, duration: 0.16, ease: "sine.inOut" }, "step2")
+        .to(accBodies[1], { opacity: 0, duration: 0.12, ease: "sine.inOut" }, "step2")
+        .to(accPanels[2], { flexGrow: 1, duration: 0.16, ease: "sine.inOut" }, "step2")
+        .to(accBodies[2], { opacity: 1, duration: 0.14, ease: "sine.inOut" }, "step2+=0.02");
+
+      // 5. Reading hold on Panel 03
+      tlAcc.to(accPanels[2], { flexGrow: 1, duration: 0.14, ease: "none" });
+
+      // 6. Smooth constant-sum transition: Panel 03 -> Panel 04
+      tlAcc
+        .to(accPanels[2], { flexGrow: 0.0001, duration: 0.16, ease: "sine.inOut" }, "step3")
+        .to(accBodies[2], { opacity: 0, duration: 0.12, ease: "sine.inOut" }, "step3")
+        .to(accPanels[3], { flexGrow: 1, duration: 0.16, ease: "sine.inOut" }, "step3")
+        .to(accBodies[3], { opacity: 1, duration: 0.14, ease: "sine.inOut" }, "step3+=0.02");
+
+      // 7. Reading hold on Panel 04 before unpinning
+      tlAcc.to(accPanels[3], { flexGrow: 1, duration: 0.18, ease: "none" });
     });
   }
 

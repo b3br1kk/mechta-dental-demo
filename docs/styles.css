@@ -1095,7 +1095,11 @@ ul {
 .accordion-deck {
   display: flex;
   gap: 14px;
-  min-height: 490px;
+  height: 500px;
+  min-height: 500px;
+  max-height: 500px;
+  width: 100%;
+  align-items: stretch;
 }
 
 .acc-panel {
@@ -1104,18 +1108,20 @@ ul {
   border-radius: 24px;
   overflow: hidden;
   display: flex;
-  flex: 0 0 88px;
-  transition: flex 0.52s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
+  height: 500px;
+  flex: 0.0001 0 88px;
+  will-change: flex-grow;
+  transition: border-color 0.25s ease;
 }
 
 .acc-panel.is-open {
-  flex: 1 1 auto;
+  flex: 1 0 88px;
   border-color: rgba(217, 107, 56, 0.45);
 }
 
 .acc-panel__trigger {
   width: 88px;
-  flex-shrink: 0;
+  flex: 0 0 88px;
   background: rgba(255, 255, 255, 0.02);
   border: 0;
   border-right: 1px solid var(--hairline-dark);
@@ -1126,6 +1132,7 @@ ul {
   justify-content: space-between;
   cursor: pointer;
   color: var(--light);
+  z-index: 2;
 }
 
 .acc-panel__num {
@@ -1147,13 +1154,16 @@ ul {
 }
 
 .acc-panel__body {
-  flex: 1;
+  width: calc(min(1360px, 100vw - 48px) - 402px);
+  min-width: calc(min(1360px, 100vw - 48px) - 402px);
+  max-width: calc(min(1360px, 100vw - 48px) - 402px);
+  height: 100%;
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1.08fr 0.92fr;
-  min-width: 680px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.32s ease;
+  will-change: opacity;
 }
 
 .acc-panel.is-open .acc-panel__body {
@@ -2024,14 +2034,18 @@ ul {
   }
   .accordion-deck {
     flex-direction: column;
+    height: auto;
     min-height: auto;
+    max-height: none;
   }
   .acc-panel {
     flex: none;
+    height: auto;
     flex-direction: column;
   }
   .acc-panel__trigger {
     width: 100%;
+    flex: none;
     flex-direction: row;
     padding: 18px 22px;
     border-right: 0;
@@ -2043,7 +2057,10 @@ ul {
   }
   .acc-panel__body {
     display: none;
+    width: 100%;
     min-width: 0;
+    max-width: none;
+    height: auto;
     grid-template-columns: 1fr;
   }
   .acc-panel.is-open .acc-panel__body {
